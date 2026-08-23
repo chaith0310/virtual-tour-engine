@@ -20,6 +20,7 @@ import {
 import "@photo-sphere-viewer/core/index.css";
 import "@photo-sphere-viewer/markers-plugin/index.css";
 
+
 import {
   clearTourDraft,
   getAllViewpoints,
@@ -33,6 +34,13 @@ import {
   type HotspotType,
   type TourData,
 } from "../data/tour";
+
+import StructureManager from "./StructureManager";
+
+import {
+  resolvePanoramaUrl,
+} from "../data/assetStore";
+
 
 type EditorMode = "EDITOR" | "PREVIEW";
 
@@ -90,6 +98,7 @@ export default function PanoramaViewer() {
 
   const [tour, setTour] = useState<TourData>(
   () => loadTourDraft(),
+
 );
 
 const [
@@ -158,6 +167,11 @@ const movingHotspotIdRef =
     showSidebar,
     setShowSidebar,
   ] = useState(true);
+
+  const [
+  showStructureManager,
+  setShowStructureManager,
+] = useState(false);
 
   const importInputRef =
     useRef<HTMLInputElement>(null);
@@ -342,8 +356,13 @@ const movingHotspotIdRef =
           return;
         }
 
-        await viewer.setPanorama(
-          viewpoint.panorama,
+        const panoramaUrl =
+  await resolvePanoramaUrl(
+    viewpoint.panorama,
+  );
+
+await viewer.setPanorama(
+  panoramaUrl,
           {
             transition: {
               effect: "fade",
@@ -1068,6 +1087,16 @@ const movingHotspotIdRef =
         >
           ☰ Tour
         </button>
+
+        <button
+  type="button"
+  style={toolbarButtonStyle}
+  onClick={() =>
+    setShowStructureManager(true)
+  }
+>
+  + Spaces & Views
+</button>
 
         <div style={modeGroupStyle}>
           <button
@@ -1981,6 +2010,31 @@ const movingHotspotIdRef =
           </article>
         </div>
       )}
+      {showStructureManager &&
+  editorMode === "EDITOR" && (
+    <StructureManager
+      tour={tour}
+      currentViewpointId={
+        currentViewpointId
+      }
+      onTourChange={(
+        updatedTour,
+      ) => {
+        tourRef.current =
+          updatedTour;
+
+        setTour(updatedTour);
+      }}
+      onNavigate={
+        navigateToViewpoint
+      }
+      onClose={() =>
+        setShowStructureManager(
+          false,
+        )
+      }
+    />
+  )}
     </div>
   );
 }
