@@ -37,6 +37,14 @@ import {
 
 import StructureManager from "./StructureManager";
 
+import RichContentManager from "./RichContentManager";
+
+import PublishManager from "./PublishManager";
+
+
+
+
+
 import {
   resolvePanoramaUrl,
 } from "../data/assetStore";
@@ -108,6 +116,7 @@ const [
   () => tour.startViewpointId,
 );
 
+
 const tourRef = useRef<TourData>(tour);
 
 const currentViewpointRef = useRef<string>(
@@ -171,6 +180,16 @@ const movingHotspotIdRef =
   const [
   showStructureManager,
   setShowStructureManager,
+] = useState(false);
+
+const [
+  showRichContentManager,
+  setShowRichContentManager,
+] = useState(false);
+
+const [
+  showPublishManager,
+  setShowPublishManager,
 ] = useState(false);
 
   const importInputRef =
@@ -1096,6 +1115,28 @@ await viewer.setPanorama(
   }
 >
   + Spaces & Views
+</button>
+
+<button
+  type="button"
+  style={toolbarButtonStyle}
+  onClick={() =>
+    setShowPublishManager(true)
+  }
+>
+  📦 Publish
+</button>
+
+<button
+  type="button"
+  style={toolbarButtonStyle}
+  onClick={() =>
+    setShowRichContentManager(
+      true,
+    )
+  }
+>
+  ⭐ Highlights
 </button>
 
         <div style={modeGroupStyle}>
@@ -2035,6 +2076,25 @@ await viewer.setPanorama(
       }
     />
   )}
+
+  {showRichContentManager && (
+  <RichContentManager
+    onClose={() =>
+      setShowRichContentManager(
+        false,
+      )
+    }
+  />
+)}
+
+{showPublishManager && (
+  <PublishManager
+    tour={tour}
+    onClose={() =>
+      setShowPublishManager(false)
+    }
+  />
+)}
     </div>
   );
 }

@@ -101,6 +101,27 @@ export interface TourData {
   updatedAt: string;
 }
 
+
+export interface RichContent {
+  id: string;
+
+  title: string;
+
+  description: string;
+
+  gallery: string[];
+
+  features: string[];
+
+  brochureUrl?: string;
+
+  websiteUrl?: string;
+
+  mapsUrl?: string;
+
+  createdAt: string;
+}
+
 /*
  * Initial demonstration tour
  */
